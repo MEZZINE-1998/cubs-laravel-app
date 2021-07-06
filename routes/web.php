@@ -142,5 +142,15 @@ Route::post('/sendNewAccount', 'CvController@createNewAccount');
 Route::post('sendMaiUpdateProfile', 'TestController@sendMaiUpdateProfile');
 
 
+Route::get('/lab', 'EntrepriseController@showlab');
+
+Route::post('/addlab', 'EntrepriseController@addlab');
+
+Route::post('/sendlabmail', 'TestController@sendLabMail');
+
+
+Route::post('/makeupdatelab', 'AdminController@makeupdateLab');
+
+
 
 Route::get('/test', 'TestController@index');

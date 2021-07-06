@@ -11,7 +11,7 @@
 		<span>Hi, a new interview from {{ $Recrutement->nom_entreprise }} has been scheduled</span><br>
 		<span>Position : {{ $Recrutement->post }}</span><br>
         <span>Description : {{ $Recrutement->description }}</span><br><br>
-		<a href="{{url('')}}" style="color: green">See more information here !</a>
+		<a href="{{url('admin/'.$id_admin)}}" style="color: green">Consult your profile for more information !</a>
 	</div>
 </body>
 </html>

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Recrutement;
 use App\Demande;
+use App\Lab;
 use Auth;
 
 use Illuminate\Support\Facades\Mail;
@@ -184,6 +185,36 @@ class EntrepriseController extends Controller
         $Demande->save();
 
         return Response()->json(["demande" => $Demande]);
+    }
+
+
+    public function showlab(){
+        $labs = Lab::where('entreprise_id', Auth::user()->id)->orderBy('created_at','desc')->get();
+        return view('lab.home', ["labs" => $labs]);
+    }
+
+
+    public function addlab(Request $request){
+
+        $lab = new Lab;
+
+        $lab->startdate = $request->startdate;
+        $lab->enddate = $request->enddate;
+        $lab->technologie = $request->technology;
+        $lab->name =  $request->name;
+        $lab->technologies = $request->technologies;
+        $lab->entreprise_id = Auth::user()->id;
+        $lab->actualstate = 'request';
+
+        $entreprise = User::find(Auth::user()->id);
+        $lab->entreprise_nom = $entreprise->name;
+
+
+        $lab->save();
+
+        $labs = Lab::where('entreprise_id', Auth::user()->id)->orderBy('created_at','desc')->get();
+        
+        return Response()->json(["etat" => $request, "labs" => $labs]);
     }
 
 

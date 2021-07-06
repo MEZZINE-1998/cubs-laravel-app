@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Recrutement;
 use App\Demande;
+use App\Lab;
 use Auth;
 
 use App\Http\Requests\cvRequest;
@@ -57,8 +58,9 @@ class AdminController extends Controller
     public function getRecrutement($id){
         $Recrutements = Recrutement::orderBy('created_at','desc')->get();
         $Demandes = Demande::orderBy('created_at','desc')->get();
+        $Labs = Lab::orderBy('created_at','desc')->get();
 
-        return Response()->json(['Recrutements' => $Recrutements, 'Demandes' => $Demandes]);
+        return Response()->json(['Recrutements' => $Recrutements, 'Demandes' => $Demandes, 'Labs' => $Labs]);
     }
 
     public function getPartners(){
@@ -74,6 +76,18 @@ class AdminController extends Controller
         $user->save();
 
         return Response()->json(['ing' => $user]);
+    }
+
+
+
+    public function makeupdateLab(Request $request){
+
+        $lab = Lab::find($request->id);
+        $lab->actualstate = $request->actualstate;
+        $lab->save();
+
+        $Labs = Lab::orderBy('created_at','desc')->get();
+        return Response()->json(['Labs' => $Labs]);
     }
 
     

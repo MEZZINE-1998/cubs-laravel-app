@@ -12,9 +12,11 @@
               <div class="col-md-6" style="margin-bottom: 8px">
                 <input v-model="keyword" class="form-control" id="search" type="text" placeholder="Search.. " style="background: none">
               </div>
+              @if(Auth::user()->post !== "Ingenieur")
               <div class="col-md-2" style="margin-bottom: 8px">
                 <input v-model="searchPrice" class="form-control" id="searchPrice" type="text" placeholder="Max rate... €/day" style="background: none">
               </div>
+              @endif
               <div class="col-md-2 text-right" style="margin-bottom: 8px">
                 @if(Auth::user()->post == "admin")
                 <a href="{{ url('cvs/create') }}"  class="btn btn-primary" style="font-size: 16px">New account</a>
@@ -130,9 +132,7 @@
 @section('javascripts')
 <script src="{{ asset('js/vue.min.js') }}"></script>
 <script src="{{ asset('https://unpkg.com/axios/dist/axios.min.js') }}"></script>
-<script src="{{ asset('https://unpkg.com/jspdf@latest/dist/jspdf.min.js') }}"></script>
-<script src="{{ asset('https://code.jquery.com/jquery-3.3.1.min.js') }}"></script>
-<script src="{{ asset('js_pdf/html2canvas.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 <script>
@@ -164,10 +164,29 @@
 
 
         deleleIng(ing){
-          axios.post(window.Laravel.url+'/deleteing',ing)
-          .then(res => {
-            this.ings = res.data.ings;
+
+          Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'danger',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              Swal.fire(
+                'Deleted!',
+                'The account has been deleted.',
+                'success'
+              )
+              axios.post(window.Laravel.url+'/deleteing',ing)
+              .then(res => {
+                this.ings = res.data.ings;
+              })
+            }
           })
+          
         },
 
         sendRequestIngs(){

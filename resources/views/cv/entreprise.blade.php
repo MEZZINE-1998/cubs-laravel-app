@@ -126,6 +126,11 @@
                            </div>
                         </div>
                         <br>
+                        <div v-if="errors.length">
+                          <ul>
+                            <li style="color: red" v-for="error in errors">@{{ error }}</li>
+                          </ul>
+                        </div>
                         <div class="form-group">
                           <span v-if="edit==1" class="form-control btn btn-danger btn-sm" @click="editRecrutement">Update</span>
                           <span v-else class="form-control btn btn-primary btn-sm" @click="addRecrutement">Add</span>
@@ -303,6 +308,7 @@
     var app = new Vue({
       el : '#app',
       data :{
+        errors: [],
         theme:'1',
         open : '0',
         authid: window.Laravel.iduser,
@@ -365,24 +371,46 @@
 
 
         addRecrutement: function(){
-          axios.post(window.Laravel.url+"/addRecrutement",this.Recrutement)
-          .then(response =>{
-            this.Recrutement.id = response.data.idr;
-            this.Recrutements = response.data.Recrutements;
-            this.open = 0;
-            this.Recrutement = this.EmptyRecrutement;
-          })
-          .catch(error => {
-            console.log('errors: ',error);
-          })
 
-          axios.post(window.Laravel.url+"/sendMailNewRec",this.Recrutement)
-          .then(response =>{
-            console.log("mail has been sended"+response.data.email)
-          })
-          .catch(error => {
-            console.log('interview errors: ',error);
-          })
+          this.errors = [];
+
+          if (!this.Recrutement.ings.length) {
+            this.errors.push("engineers required.");
+          }
+          if (!this.Recrutement.post) {
+            this.errors.push("Role required.");
+          }
+          if (!this.Recrutement.description) {
+            this.errors.push("Description required.");
+          }
+          if (!this.Recrutement.duree_entretien) {
+            this.errors.push("Interview duration required.");
+          }
+          if (!this.Recrutement.date_validation) {
+            this.errors.push("Validation deadline required.");
+          }
+          
+          if (!this.errors.length) {
+            axios.post(window.Laravel.url+"/addRecrutement",this.Recrutement)
+            .then(response =>{
+              this.Recrutement.id = response.data.idr;
+              this.Recrutements = response.data.Recrutements;
+              this.open = 0;
+              this.Recrutement = this.EmptyRecrutement;
+            })
+            .catch(error => {
+              console.log('errors: ',error);
+            })
+
+            axios.post(window.Laravel.url+"/sendMailNewRec",this.Recrutement)
+            .then(response =>{
+              console.log("mail has been sended"+response.data.email)
+            })
+            .catch(error => {
+              console.log('interview errors: ',error);
+            })
+          }
+
 
         },
 

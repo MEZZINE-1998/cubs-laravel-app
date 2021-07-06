@@ -34,13 +34,17 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('user/'.Auth::user()->id) }}">{{ __('Profile') }}</b></a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('lab') }}">{{ __('DLab') }}</b></a>
+                        </li>
+
                         @endif
                         @if(Auth::user()->post == "admin")
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('partners/') }}">{{ __('Partners') }}</b></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('admin/'.Auth::user()->id) }}">{{ __('Profile') }}</b></a>
+                            <a class="nav-link" href="{{ url('admin/'.Auth::user()->id) }}">{{ __('Monitor') }}</b></a>
                         </li>
                         @endif
                         <li  class="nav-item">

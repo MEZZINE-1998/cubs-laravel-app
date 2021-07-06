@@ -10,7 +10,7 @@
 <body>
 	<div class="col-md-6 text-center">
 		<span>Hi, a recruitment from {{ $Recrutement->nom_entreprise }} has been validated</span><br><br>
-		<a href="{{url('')}}" style="color: green">See more information here !</a>
+		<a href="{{url('admin/'.$id_admin)}}" style="color: green">Consult your profile for more information !</a>
 	</div>
 </body>
 </html>

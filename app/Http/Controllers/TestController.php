@@ -22,7 +22,7 @@ class TestController extends Controller
         $admins = User::where('post', 'admin')->get();
         foreach ($admins as $admin) {
         	$email = $admin->email;
-            Mail::send('emails.admin', ['Recrutement' => $request], function($message) use($email)
+            Mail::send('emails.admin', ['Recrutement' => $request, 'id_admin' => $admin['id']], function($message) use($email)
             {
                 $object = 'Digiwise notification - interview';
                 $message->to($email)->subject($object);
@@ -34,7 +34,7 @@ class TestController extends Controller
         foreach ($ings as $ing) {
         	$email = $ing['email'];
             $date_entretien = $ing['date_entretien'];
-            Mail::send('emails.ingenieur', ['Recrutement' => $request, 'date_entretien' => $date_entretien], function($message) use($email)
+            Mail::send('emails.ingenieur', ['Recrutement' => $request, 'date_entretien' => $date_entretien, 'id_ing' => $ing['id']], function($message) use($email)
             {
                 $object = 'Digiwise notification - interview';
                 $message->to($email)->subject($object);
@@ -54,7 +54,7 @@ class TestController extends Controller
         $admins = User::where('post', 'admin')->get();
         foreach ($admins as $admin) {
         	$email = $admin->email;
-            Mail::send('emails.adminValidation', ['Recrutement' => $request], function($message) use($email)
+            Mail::send('emails.adminValidation', ['Recrutement' => $request, 'id_admin' => $admin['id']], function($message) use($email)
             {
                 $object = 'Digiwise notification - validation';
                 $message->to($email)->subject($object);
@@ -66,7 +66,7 @@ class TestController extends Controller
         $ings = $Recrutement->id_condidats;
         foreach ($ings as $ing) {
             $email = $ing['email'];
-            Mail::send('emails.ingenieurVal', ['Recrutement' => $Recrutement], function($message) use($email)
+            Mail::send('emails.ingenieurVal', ['Recrutement' => $Recrutement, 'id_ing' => $ing['id']], function($message) use($email)
             {
                 $object = 'Digiwise notification - validation';
                 $message->to($email)->subject($object);
@@ -91,6 +91,35 @@ class TestController extends Controller
 
         return Response()->json(['email' => $email]);
 
+    }
+
+
+    //  send mail to admins and partner about lab reservation ...
+
+    public function sendLabMail(Request $request){
+
+        $entreprise = User::find(Auth::user()->id);
+
+        // send email notification to admins
+        $admins = User::where('post', 'admin')->get();
+        foreach ($admins as $admin) {
+            $email = $admin->email;
+            Mail::send('emails.labReservationToAdmin', ['lab' => $request, 'entreprise_name' => $entreprise['name'] ], function($message) use($email)
+            {
+                $object = 'Digiwise notification - Lab';
+                $message->to($email)->subject($object);
+            });
+        }
+
+        // send email notification to partner
+        $email = $entreprise['email'];
+        Mail::send('emails.labReservationToPartner', ['lab' => $request], function($message) use($email)
+        {
+            $object = 'Digiwise notification - Lab';
+            $message->to($email)->subject($object);
+        });
+
+        return Response()->json(['etat' => $email, 'etat2' => $entreprise['name']]);
     }
 
     

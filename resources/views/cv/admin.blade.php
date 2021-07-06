@@ -3,10 +3,30 @@
 @section('content')
 
 <div id="app" style="margin-top: 20px; width: 90%; margin-left: 5%">
-    <div class="main-body">
+    <div class="main-body" id="top">
+
+          <div class="gutters-sm">
+            <div class="col-md-12">
+              <div class="">
+                <div class="card-body row">
+                  <span class="col-md-9">
+                    <h5><b>Monitoring page</b></h5>
+                    Welcome to your Monitoring page. A global view on recruitments, requests for engineers and reservations for Digiwise Lab.
+                  </span>
+                  <div class="col-md-3 text-right">
+                    <button v-if = "showProfile == 0" @click="showProfile = 1" class="btn btn-primary btn-sm">Show profile</button>
+                    <button v-else @click="showProfile = 0" class="btn btn-danger btn-sm">hide profile</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <br>
     
-          <div class="row gutters-sm">
-            <div class="col-md-3 mb-3">
+          <div v-if="showProfile == 1" class="row gutters-sm" style="margin-bottom: 20px">
+
+            <div class="col-md-6">
               <div class="card">
                 <div class="card-body">
                   <div class="d-flex flex-column align-items-center text-center">
@@ -16,19 +36,15 @@
                       <b style="color: black">{{ $user->titre }}</b><br>
                       <small class="text-muted font-size-sm">{{ $user->description }}</small>
                     </div>
-                    <div>
-                      <br>
-                      @if(Auth::user())
-                      <a href="{{url('admin/'.$user->id.'/edit')}}" style="color: green">Update your profile !</a>
-                      @endif
-                    </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <!-- contacts -->
+            <!-- contacts -->
 
-              <div class="card mt-3">
+            <div class="col-md-6">
+              <div class="card">
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                     <h6 class="mb-0">Email</h6>
@@ -44,14 +60,25 @@
                   </li>
                 </ul>
               </div>
+              <br>
+              <div class="text-right">
+                @if(Auth::user())
+                <a class="btn btn-success btn-sm" href="{{url('admin/'.$user->id.'/edit')}}">Update your profile !</a>
+                @endif
+              </div>
 
             </div>
 
+          </div>
+
+
+
+          <div class="row gutters-sm">
 
             <!-- Recrutement -->
 
-            <div class="col-md-6">
-              <div class="card mb-3">
+            <div class="col-md-5">
+              <div class="card">
                 <div class="card-body">
                   <h5>Recruitments</h5>
 
@@ -88,12 +115,82 @@
               </div>
               </div>
 
-              <!-- requests -->
 
-            <div class="col-md-3 mb-3">
+            <!-- lab reservation -->
+
+            <div class="col-md-4">
               <div class="card">
                 <div class="card-body">
-                  <h5>Requests</h5>
+                  <h5>Lab Requests</h5>
+
+                  <!-- lab update  -->
+
+                  <div v-if="updateLab == 1">
+                    <hr>
+                    <h5>Update the lab state</h5>
+                    <div>
+                      <span>lab name : @{{lab.name}}</span><br>
+                      <span>partner : @{{lab.entreprise_nom}}</span>
+                    </div>
+                    <br>
+                    <input style="margin-left: 10px" type="radio" id="0" value="request" v-model="lab.actualstate">
+                    <label for="0">Request</label>
+                    <br>
+                    <input style="margin-left: 10px" type="radio" id="1" value="request approved" v-model="lab.actualstate">
+                    <label for="1">Request approved</label>
+                    <br>
+                    <input style="margin-left: 10px" type="radio" id="2" value="popartner" v-model="lab.actualstate">
+                    <label for="2">PoPartner</label>
+                    <br>
+                    <input style="margin-left: 10px" type="radio" id="3" value="confirmed and booked" v-model="lab.actualstate">
+                    <label for="3">confirmed and booked</label>
+                    <br>
+                    <input style="margin-left: 10px" type="radio" id="4" value="ongoing" v-model="lab.actualstate">
+                    <label for="4">ongoing</label>
+                    <br>
+                    <input style="margin-left: 10px" type="radio" id="5" value="closed" v-model="lab.actualstate">
+                    <label for="5">closed</label>
+                    <br>
+                    <div class="text-right">
+                      <button @click="makeupdateLab" class="btn btn-warning btn-sm">update</button>
+                    </div>
+                  </div>
+
+                  <!-- labs list -->
+
+                  <div v-for="Lab in Labs">
+                    <hr>
+                    <b>@{{Lab.entreprise_nom}}</b><br>
+                    <small><b>Lab name : @{{Lab.name}}</b></small><br>
+                    <small><b>Technology : @{{Lab.technologie}}</b></small><br>
+                    <small><b>Products :</b></small>
+                    <small>
+                      <li v-for="product in JSON.parse(Lab.technologies)">
+                        @{{product}}
+                      </li>
+                    </small>
+                    <small><b>Start date : @{{Lab.startdate}}</b></small><br> 
+                    <small><b>End date : @{{Lab.enddate}}</b></small><br><br>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <small>Created at @{{ Lab.created_at }}</small>
+                      </div>
+                      <small class="col-md-6 text-right">
+                        <span class="techState" style="text-decoration: none;">@{{ Lab.actualstate }}</span>
+                        <a @click="updateLabStat(Lab)" href="#top">Update it !</a>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- requests for more engineers -->
+
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-body">
+                  <h5>Engs Requests</h5>
                   <div v-for="Demande in Demandes">
                     <hr>
                     <b>@{{Demande.nom_entreprise}}</b><br>
@@ -104,6 +201,7 @@
                 </div>
               </div>
             </div>
+
 
           </div>
         </div>
@@ -182,6 +280,9 @@
 }
 </style>
 
+
+
+
 @endsection
 
 
@@ -190,6 +291,7 @@
 <script src="{{ asset('js/vue.min.js') }}"></script>
 <script src="{{ asset('https://unpkg.com/axios/dist/axios.min.js') }}"></script>
 <script src="{{ asset('https://unpkg.com/jspdf@latest/dist/jspdf.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('https://code.jquery.com/jquery-3.3.1.min.js') }}"></script>
 <script src="{{ asset('js_pdf/html2canvas.min.js') }}"></script>
 
@@ -206,20 +308,46 @@
     var app = new Vue({
       el : '#app',
       data :{
+        showProfile: '0',
         theme:'1',
         open : '0',
         edit : '0',
         fin_entretien: '0',
         Recrutements: [],
         Demandes: [],
+        Labs: [],
+        lab: {},
+        updateLab: '0',
       },
       methods:{
+
+        updateLabStat(lab){
+          this.updateLab = 1;
+          this.lab = lab;
+        },
+
+        makeupdateLab(){
+          console.log(this.lab.id);
+
+          axios.post(window.Laravel.url+"/makeupdatelab", this.lab)
+          .then(response => {
+            this.Labs = response.data.Labs;
+            this.updateLab = 0;
+            this.lab = {};
+          })
+          .catch(error => {
+            console.log('errors: ',error);
+          })
+
+        },
+
 
         getRecrutement: function(){
           axios.get(window.Laravel.url+"/getRecrutementAdmin/"+window.Laravel.iduser)
           .then(response => {
             this.Recrutements = response.data.Recrutements;
             this.Demandes = response.data.Demandes;
+            this.Labs = response.data.Labs;
           })
           .catch(error => {
             console.log('errors: ',error);

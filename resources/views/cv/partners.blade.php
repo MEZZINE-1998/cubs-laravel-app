@@ -36,9 +36,7 @@
 @section('javascripts')
 <script src="{{ asset('js/vue.min.js') }}"></script>
 <script src="{{ asset('https://unpkg.com/axios/dist/axios.min.js') }}"></script>
-<script src="{{ asset('https://unpkg.com/jspdf@latest/dist/jspdf.min.js') }}"></script>
-<script src="{{ asset('https://code.jquery.com/jquery-3.3.1.min.js') }}"></script>
-<script src="{{ asset('js_pdf/html2canvas.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 <script>
@@ -61,10 +59,29 @@
 
 
         deleteEntreprise(partner){
-          axios.post(window.Laravel.url+'/deleteEntreprise',partner)
-          .then(res => {
-            this.partners = res.data.partners;
+
+          Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'danger',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              Swal.fire(
+                'Deleted!',
+                'The account has been deleted.',
+                'success'
+              )
+              axios.post(window.Laravel.url+'/deleteEntreprise',partner)
+              .then(res => {
+                this.partners = res.data.partners;
+              })
+            }
           })
+
         },
 
 

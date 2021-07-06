@@ -5,8 +5,7 @@
 
 <div id="app" class="container" style="margin-top: 20px">
     <div class="main-body">
-    
-          <div class="row gutters-sm">
+          <div class="row gutters-sm canvas_div_pdf">
             <div class="col-md-4 mb-3">
               <div class="card">
                 <div class="card-body">
@@ -84,10 +83,12 @@
                     <h6 class="mb-0">Email</h6>
                     <span class="text-secondary">{{ $cv->email }}</span>
                   </li>
+                  @if(Auth::user()->post !== "Ingenieur")
                   <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                     <h6 class="mb-0">Phone</h6>
                     <span class="text-secondary">{{ $cv->telephone }}</span>
                   </li>
+                  @endif
                   <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                     <h6 class="mb-0">Address</h6>
                     <span class="text-secondary">{{ $cv->adresse }}</span>
@@ -100,6 +101,7 @@
               </div>
 
             </div>
+
             <div class="col-md-8">
 
               <!-- dispo -->
@@ -123,10 +125,9 @@
               @endif
 
               
+              <div id="content">
 
               <!-- experiences -->
-
-              <div id="content">
 
               <div class="card mb-3">
                 <div class="card-body">
@@ -194,9 +195,9 @@
                     <hr>
                     <div class="row">
                       <div class="col-md-12">
-                         <h5>@{{ experience.titre }}</h5>
+                         <b>@{{ experience.titre }}</b><br>
                          @{{ experience.commentaire }}
-                         <small><br>Company : @{{ experience.ville }}<br>@{{ experience.debut }} - @{{ experience.fin }}</small>
+                         <small><br>Company : @{{ experience.ville }}<br>@{{ experience.debut }}  -  @{{ experience.fin }}</small>
                          @if(Auth::user()->id == $cv->id)
                          <span @click="deleteExperience(experience)" style="float: right;font-size: 15px;color: red"><i class="fas fa-trash-alt"></i></span>
                         <span @click="edit_tmp_Experience(experience)" style="font-size: 15px;margin-right: 8px;float: right;" ><i class="fas fa-edit"></i></span>
@@ -283,9 +284,9 @@
                     <hr>
                     <div class="row">
                       <div class="col-md-12">
-                         <h5>@{{ formation.titref }}</h5>
+                         <b>@{{ formation.titref }}</b><br>
                          @{{ formation.commentairef }}
-                         <small><br>School : @{{ formation.villef }}<br>@{{ formation.debutf }} - @{{ formation.finf }}</small>
+                         <small><br>School : @{{ formation.villef }}<br>@{{ formation.debutf }}  -  @{{ formation.finf }}</small>
                          @if(Auth::user()->id == $cv->id)
                          <span @click="deleteFormation(formation)" style="float: right;font-size: 15px;color: red"><i class="fas fa-trash-alt"></i></span>
                         <span @click="edit_tmp_Formation(formation)" style="font-size: 15px;margin-right: 8px;float: right;" ><i class="fas fa-edit"></i></span>
@@ -373,9 +374,9 @@
                     <hr>
                     <div class="row">
                       <div class="col-md-12">
-                         <h5>@{{ certif.titrec }}</h5>
+                         <b>@{{ certif.titrec }}</b><br>
                          @{{ certif.commentairec }}
-                         <small><br>Organizaton : @{{ certif.villec }}<br>@{{ certif.debutc }} - @{{ certif.finc }}</small>
+                         <small><br>Organizaton : @{{ certif.villec }}<br>@{{ certif.debutc }}  -  @{{ certif.finc }}</small>
                          @if(Auth::user()->id == $cv->id)
                          <span @click="deleteCertif(certif)" style="float: right;font-size: 15px;color: red"><i class="fas fa-trash-alt"></i></span>
                         <span @click="edit_tmp_Certif(certif)" style="font-size: 15px;margin-right: 8px;float: right;" ><i class="fas fa-edit"></i></span>
@@ -466,6 +467,10 @@
 
 
 <style type="text/css">
+
+div{
+  white-space: pre-line;
+}
 
 .imgShape {
     width:  150px;
@@ -570,8 +575,14 @@
 
 <script src="{{ asset('js/vue.min.js') }}"></script>
 <script src="{{ asset('https://unpkg.com/axios/dist/axios.min.js') }}"></script>
-<script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js') }}"></script>
-<script src="{{ asset('js_pdf/html2canvas.min.js') }}"></script>
+<!-- <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js') }}"></script>
+<script src="{{ asset('js_pdf/html2canvas.min.js') }}"></script> -->
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+
 
 
 
@@ -693,34 +704,86 @@
       methods:{
 
         DownloadPDF:function(ing) {
-            var pdf = new jsPDF('p', 'pt', 'letter');
 
-            source = $('#content')[0];
 
-            specialElementHandlers = {
-                '#bypassme': function (element, renderer) {
-                    return true
-                }
-            };
-            margins = {
-                top: 20,
-                bottom: 20,
-                left: 20,
-                width: 522
-            };
+          var HTML_Width = $(".canvas_div_pdf").width();
+          var HTML_Height = $(".canvas_div_pdf").height();
+          var top_left_margin = 15;
+          var PDF_Width = HTML_Width+(top_left_margin*2);
+          var PDF_Height = (PDF_Width*1.5)+(top_left_margin*2);
+          var canvas_image_width = HTML_Width;
+          var canvas_image_height = HTML_Height;
+          
+          var totalPDFPages = Math.ceil(HTML_Height/PDF_Height)-1;
+          
 
-            pdf.fromHTML(
-                source, // HTML string or DOM elem ref.
-                margins.left, // x coord
-                margins.top, { // y coord
-                    'width': margins.width, // max width of content on PDF
-                    'elementHandlers': specialElementHandlers
-                },
+          html2canvas($(".canvas_div_pdf")[0],{scale: 3, allowTaint:true}).then(function(canvas) {
+            canvas.getContext('2d');
+            
+            console.log(canvas.height+"  "+canvas.width);
+            
+            
+            var imgData = canvas.toDataURL("image/jpeg", 1.0);
+            var pdf = new jsPDF('p', 'pt',  [PDF_Width, PDF_Height]);
+              pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin,canvas_image_width,canvas_image_height);
+            
+            
+            for (var i = 1; i <= totalPDFPages; i++) { 
+              pdf.addPage(PDF_Width, PDF_Height);
+              pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
+            }
+            
+              pdf.save("CV_Digiwise_"+ing.name+".pdf");
+          });
 
-                function (dispose) {
-                    pdf.save('CV_DIGIWISE_'+ing.name+'.pdf');
-                }, margins
-            );
+            // var pdf = new jsPDF();
+
+            // source = $('#content')[0];
+
+            // console.log(source);
+
+            // pdf.setFont("helvetica");
+            // pdf.setFontSize(10);
+
+            // pdf.text(15, 20, 'name : '+ing.name);
+            // pdf.text(15, 25, 'Email : '+ing.email);
+            // pdf.text(15, 30, 'Phone : '+ing.telephone);
+            // pdf.text(15, 35, 'Address : '+ing.adresse);
+            // pdf.text(15, 40, 'Age : '+ing.age);
+            // pdf.text(15, 45, 'Rate : '+ing.tarif);
+
+
+            // specialElementHandlers = {
+            //     '#bypassme': function (element, renderer) {
+            //         return true
+            //     }
+            // };
+            // margins = {
+            //     top: 55,
+            //     bottom: 15,
+            //     left: 15,
+            //     width: 170,
+            // };
+
+            // pdf.fromHTML(
+            //     source, // HTML string or DOM elem ref.
+            //     margins.left, // x coord
+            //     margins.top, 
+            //     { // y coord
+            //         'width': margins.width, // max width of content on PDF
+            //         'elementHandlers': specialElementHandlers
+            //     },
+
+            //     function (dispose) {
+            //         pdf.save('CV_DIGIWISE_'+ing.name+'.pdf');
+            //     }, 
+            //     margins = {
+            //       top: 0,
+            //       bottom: 15,
+            //       left: 15,
+            //       width: 170,
+            //     },
+            // );
         },
 
         deleteExperience:function(experience){
