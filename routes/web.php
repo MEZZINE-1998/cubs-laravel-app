@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
-});
+Route::get('/', 'HomeController@index')->middleware('guest');
+
+
 /*
 Route::get('cvs','CvController@index');
 Route::get('cvs/create','CvController@create');
@@ -28,129 +28,41 @@ Route::get('cvs/{id}','CvController@show');
 //     return view('auth.register');
 // });
 
-Route::resource('cvs','CvController');
 
-
-Route::get('/livesearch','CvController@getIngs');
-
-
-Route::get('/getexperience/{id}','CvController@getExperience');
-
-Route::get('/getformation/{id}','CvController@getFormation');
-
-Route::get('/getcertif/{id}','CvController@getCertif');
-
-Route::get('/getcompetence/{id}','CvController@getCompetence');
-
-
-
-
-
-
-Route::post('/addexperience','CvController@addExperience');
-
-Route::post('/addformation','CvController@addFormation');
-
-Route::post('/addcertif','CvController@addCertif');
-
-Route::post('/addcompetence','CvController@addCompetence');
-
-
-
-
-Route::put('/editexperience','CvController@editExperience');
-
-Route::put('/editformation','CvController@editFormation');
-
-Route::put('/editcertif','CvController@editCertif');
-
-Route::put('/editcompetence','CvController@editCompetence');
-
-
-
-
-Route::delete('/deleteexperience/{id}','CvController@deleteExperience');
-
-Route::delete('/deleteformation/{id}','CvController@deleteFormation');
-
-Route::delete('/deletecertif/{id}','CvController@deleteCertif');
-
-Route::delete('/deletecompetence/{id}','CvController@deleteCompetence');
 
 
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
+Route::post('event/add','HomeController@store');
+Route::get('/getevents', 'HomeController@getEvents');
+Route::delete('/deleteevent/{id}','HomeController@deleteEvent');
+
+Route::get('/newUser', 'UserController@newUser');
+Route::post('/addUser', 'UserController@addUser');
+Route::get('/users', 'UserController@getUsers');
+Route::delete('/deleteuser/{id}','UserController@deleteUser');
+Route::get('/userhome/{id}', 'UserController@goToUserHome');
 
 
 
-Route::get('user/{id}','EntrepriseController@index');
-Route::post('user','EntrepriseController@store');
-Route::get('user/{id}/edit','EntrepriseController@edit');
+Route::get('/absences', 'AbsenceController@index');
+Route::get('/getusers', 'AbsenceController@getUsers');
+Route::post('/addabsence', 'AbsenceController@addAbsence');
+Route::get('/getabsences', 'AbsenceController@getAbsences');
+Route::delete('/deleteabsence/{id}','AbsenceController@deleteAbsence');
 
-Route::get('/getRecrutement/{id}','EntrepriseController@getRecrutement');
-Route::post('/addRecrutement','EntrepriseController@addRecrutement');
-Route::put('/editRecrutement','EntrepriseController@editRecrutement');
-Route::delete('/deleteRecrutement/{id}','EntrepriseController@deleteRecrutement');
-
-
-Route::get('admin/{id}','AdminController@index');
-Route::post('admin','AdminController@store');
-Route::get('admin/{id}/edit','AdminController@edit');
-Route::get('/getRecrutementAdmin/{id}','AdminController@getRecrutement');
+Route::get('/tests', 'TestController@index');
+Route::get('/getjoueurs', 'TestController@getJoueurs');
+Route::post('/addtest', 'TestController@addTest');
+Route::get('/gettests', 'TestController@getTests');
+Route::delete('/deletetest/{id}','TestController@deleteTest');
 
 
-Route::post('addtocart','EntrepriseController@add_to_cart');
-Route::post('deletefromcart','EntrepriseController@delete_from_cart');
-
-
-Route::post('/editDispoIngs', 'EntrepriseController@editDispoIngs');
-
-Route::get('/getRecrutementIngenieur/{id}', 'CvController@getRecrutement');
-
-Route::post('edittarif', 'CvController@edittarif');
-
-
-Route::post('setDateEntretien','EntrepriseController@set_date_entretien');
-
-
-Route::get('partners', 'AdminController@getPartners');
-
-Route::post('makeIngAvailable', 'AdminController@make_Ing_Available');
-
-Route::post('sendRequestIngs', 'EntrepriseController@send_Request_Ings');
-
-Route::post('updatepassword', 'CvController@update_password');
+Route::get('/profileuser', 'UserController@profileUser');
+Route::post('/updateuser', 'UserController@updateUser');
 
 
 
 
-Route::post('/sendMailNewRec','TestController@sendMail');
-
-Route::post('/sendMailVal', 'TestController@sendMailValidation');
-
-
-Route::post('/deleteing','CvController@deleteing');
-
-Route::post('/deleteEntreprise', 'CvController@deleteEntrepriseFunction');
-
-
-Route::post('/sendNewAccount', 'CvController@createNewAccount');
-
-
-Route::post('sendMaiUpdateProfile', 'TestController@sendMaiUpdateProfile');
-
-
-Route::get('/lab', 'EntrepriseController@showlab');
-
-Route::post('/addlab', 'EntrepriseController@addlab');
-
-Route::post('/sendlabmail', 'TestController@sendLabMail');
-
-
-Route::post('/makeupdatelab', 'AdminController@makeupdateLab');
-
-
-
-Route::get('/test', 'TestController@index');

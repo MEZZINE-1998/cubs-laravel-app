@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" href="{{ asset('logoNEW1.png')}}" />
+        <link rel="icon" href="{{ asset('logo.jpg')}}" />
         <title>CV-INO</title>
         <link href="{{ asset('css/theme.css') }}" rel="stylesheet">
         <!-- Fonts -->

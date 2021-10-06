@@ -6,8 +6,8 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" href="{{ asset('icon.png')}}" />
-    <title>DIGIWISE</title>
+    <link rel="icon" href="{{ url('logo.png')}}" />
+    <title>CUBS</title>
     <script>
   window.Laravel ={!! json_encode([
       'csrfToken' => csrf_token()
@@ -27,52 +27,105 @@
     <link href="{{ asset('css/theme.css') }}" rel="stylesheet">
 
 </head>
-<body style="background-color: #faf9f8; font-size: 90%;">
+<body style="background-color: #faf9f8; font-size: 90%;margin-top: 80px">
     <div id="app">
+     
+        @include('partials.menu')
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    @include('partials.flash')
+                </div>
+            </div>   
+        </div>
+        <link href="{{ url('https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css') }}" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU'" crossorigin="anonymous">
         
-            @include('partials.menu')
-
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        @include('partials.flash')
-                    </div>
-                </div>   
-            </div>
-            
-            @yield('content')
-            @yield('javascripts')
+        @yield('content')
+        @yield('javascripts')
 
     </div>
-<a href="#top" class="gototop" style="border-radius: 50%"><i style="color: black" class="fas fa-angle-double-up"></i></a>
-
 </body>
 
 <footer class="footer">
-    <div class="footer_top" style="padding: 0px; margin-bottom: 20px; margin-top: 80px">
-        <div class="container"><hr><br><br>
+    <div class="footer_top" style="padding: 0px; margin-top: 80px">
+        <!-- <div class="container"><hr><br><br>
             <div class="row">
                 <div class="col-md-12 text-center">
                     <div class="footer_widget">
                         <div class="footer_logo">
                             <a href="#">
-                                <img height="40px" src="{{asset('icon.png')}}" alt="">
+                                <img height="40px" src="{{asset('logo.jpg')}}" alt="">
                                 <br>
                             </a>
                         </div>
                         <div style="margin-top: 20px">
-                            <p class="copyright">© DIGIWISE 2021</p>
+                            <p class="copyright">© CUBS 2021</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </footer>
 
 
 <style type="text/css">
 
+[title]:hover:after {
+  visibility: visible;
+}
+  
+[title]:after {
+    content: attr(title);
+    background-color: #000;
+    border-radius: 30px;    
+    color: #fff;
+    position: absolute;
+    padding: 0px 20px;
+    visibility: hidden;
+    right: 6ch;
+    opacity: 1;
+}
+
+.userStyle{
+    background-color: #fff; 
+    border-radius: 4px; 
+    padding: 10px; 
+    margin-bottom: 6px;
+    width: 105%;
+    box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, .1);
+    border-top: 2px solid #fc9330;
+}
+
+@keyframes shake
+{
+0% { transform: translate(1px, -1px) rotate(0deg);}
+10% { transform: translate(1px, -3px) rotate(-1deg);}
+20% { transform: translate(1px, -5px) rotate(-3deg);}
+30% { transform: translate(1px, -7px) rotate(0deg);}
+40% { transform: translate(1px, -9px) rotate(1deg);}
+50% { transform: translate(1px, -11px) rotate(3deg);}
+60% { transform: translate(1px, -9px) rotate(0deg);}
+70% { transform: translate(1px, -7px) rotate(-1deg);}
+80% { transform: translate(1px, -5px) rotate(-3deg);}
+90% { transform: translate(1px, -3px) rotate(0deg);}
+100% { transform: translate(1px, -1px) rotate(-1deg);}
+}
+
+.moreInfoTestStyle{
+     position:absolute;
+     background-color: #FFF;
+     padding: 30px;
+     width: 60%;
+     right:20%;
+     top: 50%;
+     -ms-transform: translateY(-50%);
+     transform: translateY(-50%);
+     border-radius: 4px;
+     box-shadow: 0px 0px 0px 1000px rgba(0, 0, 0, .4);
+     z-index: 9999;
+     position: fixed;
+  }
 .gototop {
   width: 45px;
   height: 45px;
