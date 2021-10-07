@@ -610,7 +610,7 @@
             this.tests = response.data.tests;
             Swal.fire(
               '',
-              'A new account has been created',
+              'A new test has been created',
               'success',
             )
           })
