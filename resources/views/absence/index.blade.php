@@ -176,7 +176,7 @@
             this.absence.json_absences = {}
             Swal.fire(
               '',
-              'A new account has been created',
+              'A absence has been created',
               'success',
             )
           })
