@@ -211,13 +211,32 @@
         },
 
         deleteAbsence(absence){
-          axios.delete(window.Laravel.url+"/deleteabsence/"+absence.id)
-          .then(response =>{
-            this.absences = response.data.absences;  
-          })
-          .then(error =>{
-            console.log(error);
-          })
+
+          Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'danger',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#ccc',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.value) {
+              Swal.fire(
+                'Deleted!',
+                '',
+                'success'
+              )
+              axios.delete(window.Laravel.url+"/deleteabsence/"+absence.id)
+              .then(response =>{
+                this.absences = response.data.absences;  
+              })
+              .then(error =>{
+                console.log(error);
+              })
+            }
+          }) 
+          
         },
 
       },

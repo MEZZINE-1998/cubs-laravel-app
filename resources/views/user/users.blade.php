@@ -112,13 +112,32 @@
         
 
         deleteUser(user){
-          axios.delete(window.Laravel.url+"/deleteuser/"+user.id)
-          .then(response =>{
-            this.users = response.data.users;  
+
+          Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'danger',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#ccc',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.value) {
+              Swal.fire(
+                'Deleted!',
+                '',
+                'success'
+              )
+              axios.delete(window.Laravel.url+"/deleteuser/"+user.id)
+              .then(response =>{
+                this.users = response.data.users;  
+              })
+              .then(error =>{
+                console.log(error);
+              })
+            }
           })
-          .then(error =>{
-            console.log(error);
-          })
+          
         },
        
 

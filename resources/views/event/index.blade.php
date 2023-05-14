@@ -39,7 +39,7 @@
               </span>
               @if(Auth::user()->categorie == 'Admin')
               <span class="col-md-12 text-right" style="margin-top: 16px">
-                <a href="" @click="deleteEvent(event)" class="btn btn-danger btn-sm" style="background: none; color: #f03e4e ;border-radius: 20px; width: 110px">Retirer</a>
+                <a @click="deleteEvent(event)" class="btn btn-danger btn-sm" style="background: none; color: #f03e4e ;border-radius: 20px; width: 110px">Retirer</a>
               </span>
               @endif
             </span>
@@ -283,13 +283,32 @@
 
 
         deleteEvent:function(event){
-          axios.delete(window.Laravel.url+"/deleteevent/"+event.id)
-          .then(response =>{
-            this.events = response.data.events;  
+
+          Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'danger',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#ccc',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.value) {
+              Swal.fire(
+                'Deleted!',
+                '',
+                'success'
+              )
+              axios.delete(window.Laravel.url+"/deleteevent/"+event.id)
+              .then(response =>{
+                this.events = response.data.events;  
+              })
+              .then(error =>{
+                console.log(error);
+              })
+            }
           })
-          .then(error =>{
-            console.log(error);
-          })
+          
         },
 
         getJoueurs: function(){

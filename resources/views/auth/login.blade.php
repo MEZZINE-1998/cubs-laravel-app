@@ -11,7 +11,7 @@
 
                     <!-- image -->
                     <div style="margin-top: 30px; margin-bottom: 30px" class="col-md-12 text-center">
-                        <img height="150px" src="{{url('logo.png')}}">
+                        <img height="150px" src="{{url('logo2.png')}}">
                     </div>
                 
                     <form method="POST" action="{{ route('login') }}">

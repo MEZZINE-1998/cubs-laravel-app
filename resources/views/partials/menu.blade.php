@@ -41,7 +41,7 @@
         <!-- menu -->
         <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #6592d6;box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, .2);">
           <a class="navbar-brand" href="{{ url('/home') }}">
-            <img height="35px" src="{{url('logo.png')}}"> <b style="color: white">CUBS</b>
+            <img height="35px" src="{{url('logo2.png')}}"> <b style="color: #000">ROMAFC</b>
           </a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
